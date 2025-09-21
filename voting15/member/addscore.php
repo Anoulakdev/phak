@@ -6,6 +6,20 @@ $result12 = $conn->query($sql12);
 $row12 = $result12->fetch_assoc();
 
 $length = isset($row12['s_no']) ? strlen($row12['s_no']) : 0;
+
+$query = "SELECT * FROM newcandidate";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$result = $stmt->get_result();
+$data = array();
+while ($row = $result->fetch_assoc()) {
+    $data[] = $row;
+}
+
+// ปิด resource
+$result->free();
+$stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +55,7 @@ $length = isset($row12['s_no']) ? strlen($row12['s_no']) : 0;
 
         <section class="section">
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-md-6">
 
                     <div class="card">
                         <div class="card-body">
@@ -51,7 +65,7 @@ $length = isset($row12['s_no']) ? strlen($row12['s_no']) : 0;
                             <form class="row g-3" action="s_action" method="post" id="scanForm">
                                 <input type="hidden" name="m_id" value="<?= $_SESSION['m_id']; ?>">
 
-                                <div class="col-md-6 col-12">
+                                <div class="col-12">
                                     <div class="col-12">
                                         <input type="text" name="s_no" id="s_no" class="form-control" maxlength="<?= $length ?>" placeholder="ເລກ​ທີ່​ໃບ​ລົງ​ຄະ​ແນນ" required>
                                     </div>
@@ -67,6 +81,29 @@ $length = isset($row12['s_no']) ? strlen($row12['s_no']) : 0;
                                     </div>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="my-4"><i class="bi bi-person"></i> ຂໍ້​ມູນຜູ້​ສ​ະ​ໝັກ</h4>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>ລ/ດ</th>
+                                        <th>ຊື່ ແລະ ນາມ​ສະ​ກ​ຸນ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($data as $row) { ?>
+                                        <tr>
+                                            <td class="text-center"><?= $row['nc_id']; ?></td>
+                                            <td><?= $row['nc_name']; ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
